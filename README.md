@@ -16,4 +16,4 @@ Up until now, the method of applying mods required extracting your game, taking 
 if I had an iOS device to test on, I probably could port it. unfortunately, I don't.
 
 ## How can I make Foilomancer compatible mods?
-Open FoilomancerGUI on your computer, connect your phone with ADB. Load the split APK you edited. Foilomancer will then output a FLC file that can work everywhere and doesn't replace the split apk, it just automatically and elegantly applies the changes.
+Open FoilomancerGUI on your computer, connect your phone with ADB. Load the split APK you edited. Fill in some data about the mod. Foilomancer will then output a FLC file that can work everywhere and doesn't replace the split apk, it just automatically and elegantly applies the changes.
