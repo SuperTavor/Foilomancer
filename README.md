@@ -3,7 +3,7 @@ A tool for making and applying mods for YKW1 Smartphone without the fear of pira
 
 ## Features:
 
-*Pack your mod inside a FLC file, a custom file type made exclusvely for Foilomancer compatible mods*
+*Pack your mod inside a FOI file, a custom file type made exclusvely for Foilomancer compatible mods*
 
 *Don't be afraid of piracy! Foilomancer can't work if you don't have a copy of the game installed on your device.*
 
