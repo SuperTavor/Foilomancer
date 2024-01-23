@@ -30,7 +30,7 @@ func main() {
 	if os.Args[1] == "create" {
 		create()
 	} else if os.Args[1] == "load" {
-		//check for vanilla apk dump
+		load()
 
 	} else {
 		fmt.Println("Please make sure that your args follow this template: foilomancer create [modded game dump path]")
@@ -112,8 +112,10 @@ func load() {
 			mutuals = append(mutuals, file)
 		}
 	}
-	//copy the vanilla apk dump into an output folder
 	//patch the files that are present in the foil file
+	//copy them into the tmp folder
+	//sign them
+	//load into the user's device
 }
 func CreateXdelta(oldf string, newf string, patchf string) {
 	cmd := exec.Command("cmd.exe", "/C", "xdelta.dll", "-e", "-s", oldf, newf, patchf)
@@ -123,7 +125,15 @@ func CreateXdelta(oldf string, newf string, patchf string) {
 		//fmt.Println("Output:", string(output))
 		return
 	}
-
+}
+func PatchXdelta(oldf string, patchf string, newf string) {
+	cmd := exec.Command("cmd.exe", "/C", "xdelta.dll", "-d", "-s", oldf, patchf, newf)
+	_, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("Error creating patch from %s: %s", oldf, err)
+		cleanupCreate()
+		os.Exit(1)
+	}
 }
 func fileExists(file string) bool {
 	exists, _ := afero.Exists(fs, file)
