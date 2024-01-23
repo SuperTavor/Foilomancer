@@ -21,10 +21,9 @@ func containsValue(slice []string, valueToFind string) bool {
 	return false
 }
 
-// foilomancer is real this time chat
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("usage")
+		fmt.Println("Foilomancer version 1.0.0\n------------\nto pack a mod: foilomancer create [modded game dump path]\nto load a mod:foilomancer load [foil file] ")
 		os.Exit(1)
 	}
 	if os.Args[1] == "create" {
@@ -112,9 +111,22 @@ func load() {
 			mutuals = append(mutuals, file)
 		}
 	}
+
 	//patch the files that are present in the foil file
-	//copy them into the tmp folder
+	for _, mutual := range mutuals {
+		PatchXdelta("game_dump/"+mutual, "tmp/"+mutual+".patch", "tmp/patched_"+mutual)
+	}
 	//sign them
+	//apksigner sign --ks foilomancer.keystore --ks-pass pass:foilomancer --key-pass pass:foilomancer --out signed.apk base.apk
+	for _, mutual := range mutuals {
+		cmd := exec.Command("cmd.exe", "/C", "apksigner.bat", "sign", "--ks", "foilomancer.keystore", "--ks-pass", "pass:foilomancer", "--key-pass", "pass:foilomancer", "--out", "tmp/signed_"+mutual, "tmp/patched_"+mutual)
+		_, err := cmd.CombinedOutput()
+		if err != nil {
+			fmt.Printf("Could not sign APK:%s\n", err)
+			cleanupCreate()
+			os.Exit(1)
+		}
+	}
 	//load into the user's device
 }
 func CreateXdelta(oldf string, newf string, patchf string) {
@@ -154,8 +166,8 @@ func getGameDump() []os.FileInfo {
 	}
 	return gamedump_files
 }
-func inputMd() []string {
-	var md []string
+func inputMd() [3]string {
+	var md [3]string
 	fmt.Println("What is your mod's name?")
 	fmt.Scanln(&md[0])
 	fmt.Println("What is your mod's version?")
@@ -175,7 +187,7 @@ func packFoil(mutuals *[]string, modname string) {
 	var inzip []string
 	inzip = append(inzip, "tmp/metadata.txt")
 	for _, mutual := range *mutuals {
-		inzip = append(inzip, "tmp/"+mutual+".fmd")
+		inzip = append(inzip, "tmp/"+mutual+".patch")
 	}
 	zerr := archiver.Archive(inzip, "mod.zip")
 	if zerr != nil {
@@ -233,9 +245,10 @@ func create() {
 			mutual_files = append(mutual_files, file.Name())
 		}
 	}
+	// TODO Replace xdelta patching with zip content checking.
 	//create xdelta patches for the modified files
 	for _, mutual := range mutual_files {
-		CreateXdelta("game_dump/"+mutual, moddedGamePath+"/"+mutual, "tmp/"+mutual+".fmd")
+		CreateXdelta("game_dump/"+mutual, moddedGamePath+"/"+mutual, "tmp/"+mutual+".patch")
 	}
 	//put that in a zip with metadata and name the zip [modname].foil
 	packFoil(&mutual_files, modname)
