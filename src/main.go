@@ -22,6 +22,7 @@ func containsValue(slice []string, valueToFind string) bool {
 }
 
 func main() {
+	//testmain()
 	if len(os.Args) < 2 {
 		fmt.Println("Foilomancer version 1.0.0\n------------\nto pack a mod: foilomancer create [modded game dump path]\nto load a mod:foilomancer load [foil file] ")
 		os.Exit(1)
@@ -34,6 +35,13 @@ func main() {
 	} else {
 		fmt.Println("Please make sure that your args follow this template: foilomancer create [modded game dump path]")
 	}
+}
+func testmain() {
+	list := listFiles("test.zip")
+	for k, v := range list {
+		fmt.Println(k, v)
+	}
+	os.Exit(1)
 }
 func load() {
 	//check cmdargs
