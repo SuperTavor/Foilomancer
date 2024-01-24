@@ -37,8 +37,8 @@ func main() {
 	}
 }
 func testmain() {
-	list := listFiles("test.zip")
-	for k, v := range list {
+	GetFiles("test.zip", &vanillaList)
+	for k, v := range vanillaList {
 		fmt.Println(k, v)
 	}
 	os.Exit(1)
